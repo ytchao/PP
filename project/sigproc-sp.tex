@@ -1,0 +1,31 @@
+\documentclass{acm_proc_article-sp}
+
+\begin{document}
+
+\title{Parallelization of Photon Mapping Using OpenCL}
+\subtitle{Chih-Mao Chen (0356162), Yeng-Ting Chao (0356029)}
+
+\maketitle
+
+\section{Introduction}
+In computer graphics, photon mapping [1] is a two-pass global illumination algorithm developed by Henrik Wann Jensen that approximately solves the rendering equation. Rays from the light source and rays from the camera are traced independently until some termination criterion is met, then they are connected in a second step to produce a radiance value. It is used to realistically simulate the interaction of light with different objects. Specifically, it is capable of simulating the refraction of light through a transparent substance such as glass or water, diffuse interreflection between illuminated objects, the subsurface scattering of light in translucent materials, and some of the effects caused by particulate matter such as smoke or water vapor. It can also be extended to more accurate simulations of light such as spectral rendering.
+\section{Problem}
+As the photon scattering process, the tracing of camera rays, and the importance sampling steps are easily parallelizable in the photon mapping algorithm, we seek to exploit the massive parallelism capabilities offered by the GPU to speed-up the algorithm via OpenCL[4]. In addition, the result quality of photon mapping scales well with the available computation power and degrades gracefully on lower-end devices, a property that is not shared by other GI algorithms. This allows photon mapping to be used in a variety of environments.
+\section{Approach}
+In order to perform rendering on the GPU, we must first devise an efficient representation that describes a 3D scene on the GPU. Then, the algorithms for photon scattering, importance sampling and radiance estimation need to be ported to be run on the GPU. Finally, the resulting image needs to be transmitted back to CPU for storage or sent to the framebuffer for display.
+\section{Language selection}
+C++ with OpenCL. We chose OpenCL as we want to exploit the massive parallelism provided by the GPU, and OpenCL is a standardized and vendor-neutral API for GPU programming.
+\section{Related work}
+Photon mapping was first introduced by Henrik Wann Jensen in 1996 as an alternative to ray tracing and radiosity techniques. Photon mapping is then extensively studied and many methods were proposed to further improve the algorithm. Such attempts include Progressive Photon Mapping [2] which replaces the radiance estimation with a progressive-based approach to speed-up the algorithm. In the recent years, various implementations of photon mapping on the GPU is able to achieve near-realtime performance in simple settings[3].
+\section{Expected results}
+The rendering time should be greatly reduced by explioting the parallism on the GPU.
+\section{Timetable}
+11/30, Complete an implemention of photon mapping on the CPU\\
+12/25, Implement the photon mapping algorithm on the GPU using OpenCL\\
+12/31, Evaluation and benchmark the performance and scalability of our implementation\\
+\section{References}
+[1] Henrik Wann Jensen, "Global Illumination using Photon Maps", 1996 {\newline}
+[2] Toshiya Hachisuka, et al, "Progressive Photon Mapping" {\newline}
+[3] NVIDIA, "Toward Practical Real-Time Photon Mapping: Efficient GPU Density Estimation", 2013 {\newline}
+[4] https://www.khronos.org/opencl/ {\newline}
+\end{document}
