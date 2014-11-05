@@ -1,6 +1,7 @@
 *.log
 *.aux
 *.pdf
+*.out
 
 hw2/*
 !hw2/CG	
