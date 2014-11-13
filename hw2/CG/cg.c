@@ -5,7 +5,7 @@
 #include "globals.h"
 #include "randdp.h"
 #include "timers.h"
-
+#include "omp.h"
 //---------------------------------------------------------------------
 /* common / main_int_mem / */
 static int colidx[NZ];
@@ -340,8 +340,8 @@ static void conj_grad(int colidx[],
     //       below.   On the Cray t3d, the reverse is true, i.e., the 
     //       unrolled-by-two version is some 10% faster.  
     //       The unrolled-by-8 version below is significantly faster
-    //       on the Cray t3d - overall speed of code is 1.5 times faster.
-
+    //       on the Cray t3d - overall speed of code is 1.5 times faster. 
+    #pragma omp parallel for private(sum,j,k) 
     for (j = 0; j < lastrow - firstrow + 1; j++) {
       sum = 0.0;
       for (k = rowstr[j]; k < rowstr[j+1]; k++) {
@@ -405,6 +405,7 @@ static void conj_grad(int colidx[],
   // The partition submatrix-vector multiply
   //---------------------------------------------------------------------
   sum = 0.0;
+  #pragma omp parallel for private(d,j,k)
   for (j = 0; j < lastrow - firstrow + 1; j++) {
     d = 0.0;
     for (k = rowstr[j]; k < rowstr[j+1]; k++) {
